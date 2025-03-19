@@ -9,6 +9,7 @@ import { SignupValidation } from "@/lib/validation";
 import { z } from "zod";
 import Loader from "@/components/shared/Loader";
 import { Link } from "react-router-dom";
+import { createUserAccount } from "@/lib/appwrite/api";
 
 
 const SignupForm = () => {
@@ -27,14 +28,15 @@ const SignupForm = () => {
  
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof SignupValidation>) {
-        // const newUser = await createUserAccount(values);
+        const newUser = await createUserAccount(values);
+
+        console.log(newUser)
     }
 
     return (
         <Form {...form}>
             <div className="sm:w-420 flex-center flex-col">
                 <img src="assets\images\logo6.png" alt="logo"/>
-
                 <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">Create a new account</h2>
                 <p className = "text-cyan-600 small-medium md:base-regular mt-2">To use UnTide, please enter your details</p>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full mt-4">
