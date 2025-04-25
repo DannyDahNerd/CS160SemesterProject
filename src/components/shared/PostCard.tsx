@@ -3,6 +3,7 @@ import { timeAgo } from '@/lib/utils';
 import { Models } from 'appwrite';
 import React from 'react'
 import { Link } from 'react-router-dom';
+import PostStats from './PostStats';
 
 type PostCardProps = {
     post: Models.Document;
@@ -57,17 +58,25 @@ const PostCard = ({post}:PostCardProps) => {
                         </li>
                     ))}
                 </ul>
-
             </div>
-
-            <div className="overflow-hidden rounded-xl max-w-xs mx-auto">
-  <img 
-    src={post.imageUrl || '/assets/icons/profile-placeholder.svg'}
-    className="w-full h-auto object-contain"
-    alt="post image"
-  />
-</div>
+            
+            {/* we can decide which one looks better on the home page
+            personally ... idk
+            */}
+            {/* <div className="overflow-hidden rounded-xl max-w-xs mx-auto">
+            <img 
+                src={post.imageUrl || '/assets/icons/profile-placeholder.svg'}
+                className="w-full h-auto object-contain"
+                alt="post image"
+            />
+            </div> */}
+            <img 
+                src={post.imageUrl || '/assets/icons/profile-placeholder.svg'}
+                className="post-card_img"
+                alt="post image"
+            />
         </Link>
+        <PostStats post={post} userId={user.id}/>
     </div>
   )
 }

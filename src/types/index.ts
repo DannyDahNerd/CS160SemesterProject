@@ -25,7 +25,7 @@ export type INavLink = {
     postId: string;
     caption: string;
     imageId: string;
-    imageUrl: URL;
+    imageUrl: string;
     file: File[];
     location?: string;
     tags?: string;
@@ -55,3 +55,4 @@ export type INavLink = {
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
     checkAuthUser: ()=>Promise<boolean>;
   };
+  
