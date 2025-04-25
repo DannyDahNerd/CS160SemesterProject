@@ -56,3 +56,27 @@ export const timeAgo = (timestamp: string = ""): string => {
 export const checkIsLiked = (likeList: string[], userId: string) => {
   return likeList.includes(userId);
 };
+
+export async function geocodeAddress(address: string) {
+  const params = new URLSearchParams({
+    q: address,
+    format: 'json',
+  });
+
+  const res = await fetch(`https://nominatim.openstreetmap.org/search?${params.toString()}`, {
+    headers: {
+      'User-Agent': 'YourAppName/1.0', // Nominatim requires a User-Agent
+      'Accept-Language': 'en', // optional: request results in English
+    },
+  });
+
+  const data = await res.json();
+  if (data.length > 0) {
+    return {
+      lat: parseFloat(data[0].lat),
+      lng: parseFloat(data[0].lon),
+    };
+  } else {
+    throw new Error('No results found');
+  }
+}

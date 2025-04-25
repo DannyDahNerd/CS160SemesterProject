@@ -16,6 +16,7 @@ export default function MapPage() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         <Marker position={[36.9645, -122.0167]}>
+          //36.6134933long: -121.8979357
           <Popup>
             Santa Cruz Beach Boardwalk. <br /> CLEAN ME!!
           </Popup>
