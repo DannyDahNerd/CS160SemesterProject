@@ -1,16 +1,29 @@
 import { useUserContext } from "@/context/AuthContext";
-import { geocodeAddress, timeAgo } from "@/lib/utils";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { geocodeAddress } from "@/lib/utils";
+import { Marker, Popup } from "react-leaflet";
 import { Models } from "appwrite";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import PostStats from "./PostStats";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "../ui/button";
 
 type PostCardProps = {
   post: Models.Document;
 };
+
+function MyPopupButton({ postId }: { postId: any }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/posts/${postId}`);
+  };
+
+  return (
+    <button onClick={handleClick} className="untide-button_primary">
+      View Event
+    </button>
+  );
+}
 const MapMarker = ({ post }: PostCardProps) => {
-  const { user } = useUserContext();
   const [coords, setCoords] = useState<{
     name: string;
     lat: number;
@@ -38,9 +51,15 @@ const MapMarker = ({ post }: PostCardProps) => {
   return (
     <Marker position={[coords.lat, coords.lng]}>
       <Popup>
-        {coords.name} <br />
-        {post.caption} <br />
-        <Link to={`/posts/${post.$id}`}> View Event</Link>
+        <div className="popup-loc">
+          {coords.name} <br />
+        </div>
+        <div className="popup-desc">
+          Description: {post.caption} <br />
+        </div>
+        <div className="popup-button">
+          <MyPopupButton postId={post.$id} />
+        </div>
       </Popup>
     </Marker>
   );

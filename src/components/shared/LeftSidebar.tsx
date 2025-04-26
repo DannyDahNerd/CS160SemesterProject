@@ -8,13 +8,13 @@ import { useSignOutAccount } from "@/lib/react-query/queriesAndMutations";
 
 const LeftSidebar = () => {
   const { pathname } = useLocation();
-  const {user} = useUserContext();
+  const { user } = useUserContext();
   const navigate = useNavigate();
-  const {mutate: signOut, isSuccess} = useSignOutAccount();
-  
-  useEffect( () => {
-      if(isSuccess) navigate(0);
-  }, [isSuccess])
+  const { mutate: signOut, isSuccess } = useSignOutAccount();
+
+  useEffect(() => {
+    if (isSuccess) navigate(0);
+  }, [isSuccess]);
   return (
     <nav className="leftsidebar">
       <div className="flex flex-col gap-11">
@@ -38,9 +38,7 @@ const LeftSidebar = () => {
           />
           <div className="flex flex-col">
             <p className="body-bold"> {user.name}</p>
-            <p className="small-regular text-light-2">
-              @{user.username} 
-            </p>
+            <p className="small-regular text-light-3">@{user.username}</p>
           </div>
         </Link>
 
@@ -62,7 +60,11 @@ const LeftSidebar = () => {
                     src={link.imgURL}
                     alt={link.label}
                     className={`group-hover:invert-white 
-                      ${isActive ? "invert-white" : "invert hue-rotate-[120deg] saturate-[300%]"}
+                      ${
+                        isActive
+                          ? "invert-white"
+                          : "invert hue-rotate-[120deg] saturate-[300%]"
+                      }
                       transition`}
                   />
                   {link.label}
