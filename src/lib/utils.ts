@@ -71,10 +71,12 @@ export async function geocodeAddress(address: string) {
   });
 
   const data = await res.json();
+  console.log(data[0])
   if (data.length > 0) {
     return {
       lat: parseFloat(data[0].lat),
       lng: parseFloat(data[0].lon),
+      name: data[0].display_name,
     };
   } else {
     throw new Error('No results found');
