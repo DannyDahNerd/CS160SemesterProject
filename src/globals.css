@@ -247,8 +247,7 @@
 
   .popup-loc {
     font-family: 'Arial';
-    padding: 10px;
-    border-radius: 8px;
+    padding: 5px;
     text-align: center;
     @apply
     text-cyan-500
@@ -265,6 +264,7 @@
 
   .popup-button {
     display: flex;
+    padding: 5px;
     justify-content: center;
     align-items: center;
     color:white;

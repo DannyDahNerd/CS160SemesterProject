@@ -51,11 +51,10 @@ const MapMarker = ({ post }: PostCardProps) => {
   return (
     <Marker position={[coords.lat, coords.lng]}>
       <Popup>
-        <div className="popup-loc">
-          {coords.name} <br />
-        </div>
+        <div className="popup-loc">{coords.name}</div>
         <div className="popup-desc">
-          Description: {post.caption} <br />
+          <h1 className="font-bold">Description:</h1>
+          {post.caption}
         </div>
         <div className="popup-button">
           <MyPopupButton postId={post.$id} />
