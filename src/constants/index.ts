@@ -10,9 +10,10 @@ export const sidebarLinks = [
       label: "Explore Map",
     },
     {
+      // CHANGE THIS ONE. WE DON'T NEED PEOPLE PAGE, WE NEED 'UPCOMING EVENTS' PAGE
       imgURL: "/assets/icons/people.svg",
       route: "/all-users",
-      label: "People",
+      label: "Upcoming Events",
     },
     {
       imgURL: "/assets/icons/bookmark.svg",
