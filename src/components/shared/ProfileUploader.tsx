@@ -1,47 +1,68 @@
-import { useCallback, useState } from "react";
-import { FileWithPath, useDropzone } from "react-dropzone";
-
-import { convertFileToUrl } from "@/lib/utils";
+import { useState } from "react";
+import Loader from "@/components/shared/Loader"; // your Loader component
 
 type ProfileUploaderProps = {
-  fieldChange: (files: File[]) => void;
+  fieldChange: (file: File) => void;
   mediaUrl: string;
 };
 
 const ProfileUploader = ({ fieldChange, mediaUrl }: ProfileUploaderProps) => {
-  const [file, setFile] = useState<File[]>([]);
-  const [fileUrl, setFileUrl] = useState<string>(mediaUrl);
+  const [filePreview, setFilePreview] = useState<string>(mediaUrl);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const onDrop = useCallback(
-    (acceptedFiles: FileWithPath[]) => {
-      setFile(acceptedFiles);
-      fieldChange(acceptedFiles);
-      setFileUrl(convertFileToUrl(acceptedFiles[0]));
-    },
-    [file]
-  );
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: {
-      "image/*": [".png", ".jpeg", ".jpg"],
-    },
-  });
+    if (file) {
+      // Show preview immediately
+      const previewUrl = URL.createObjectURL(file);
+      setFilePreview(previewUrl);
+
+      // Pass file back to parent form
+      setIsUploading(true);
+      fieldChange(file);
+
+      // Fake upload time (optional if you want a smooth animation effect)
+      setTimeout(() => {
+        setIsUploading(false);
+      }, 1500); // Adjust time if needed
+    }
+  };
 
   return (
-    <div {...getRootProps()}>
-      <input {...getInputProps()} className="cursor-pointer" />
-
-      <div className="cursor-pointer flex-center gap-4">
+    <div className="relative flex items-center justify-center w-28 h-28">
+      {/* Profile Image */}
+      <label
+        htmlFor="profile-photo"
+        className="relative w-full h-full cursor-pointer group"
+      >
         <img
-          src={fileUrl || "/assets/icons/profile-placeholder.svg"}
-          alt="image"
-          className="h-24 w-24 rounded-full object-cover object-top"
+          src={filePreview}
+          alt="profile photo"
+          className="rounded-full object-cover w-full h-full group-hover:brightness-75 transition-all duration-300"
         />
-        <p className="text-primary-500 small-regular md:bbase-semibold">
-          Change profile photo
-        </p>
-      </div>
+
+        {/* Hover text */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+          <p className="text-white text-xs font-semibold">Change Photo</p>
+        </div>
+
+        {/* Upload Spinner */}
+        {isUploading && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-full">
+            <Loader />
+          </div>
+        )}
+      </label>
+
+      {/* Hidden File Input */}
+      <input
+        id="profile-photo"
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="hidden"
+      />
     </div>
   );
 };

@@ -11,13 +11,17 @@ export type INavLink = {
     imageId: string;
     imageUrl: URL | string;
     file: File[];
+    followers?: string[];  
+    following?: string[];
   };
   
   export type INewPost = {
     userId: string;
     caption: string;
     file: File[];
-    location?: string;
+    location: string;
+    latitude: number;
+    longitude: number;
     tags?: string;
   };
   
@@ -27,7 +31,9 @@ export type INavLink = {
     imageId: string;
     imageUrl: string;
     file: File[];
-    location?: string;
+    location: string;
+    latitude: number;
+    longitude: number;
     tags?: string;
   };
   
@@ -38,6 +44,9 @@ export type INavLink = {
     email: string;
     imageUrl: string;
     bio: string;
+    imageId: string;
+  followers?: string[];  
+  following?: string[];
   };
   
   export type INewUser = {

@@ -127,6 +127,8 @@ export async function createPost(post: INewPost) {
                 caption: post.caption,
                 imageUrl: fileUrl,
                 imageId: uploadedFile.$id,
+                latitude: post.latitude, 
+                longitude: post.longitude,
                 location: post.location,
                 tags: tags
             }
@@ -297,6 +299,8 @@ export async function updatePost(post: IUpdatePost) {
                 caption: post.caption,
                 imageUrl: image.imageUrl,
                 imageId: image.imageId,
+                latitude: post.latitude,
+                longitude: post.longitude,
                 location: post.location,
                 tags: tags
             }
@@ -377,6 +381,8 @@ export async function getUserById(userId: string) {
           bio: user.bio,
           imageUrl: image.imageUrl,
           imageId: image.imageId,
+          followers: user.followers, // <-- added
+          following: user.following, // <-- added
         }
       );
   
@@ -396,6 +402,28 @@ export async function getUserById(userId: string) {
       }
   
       return updatedUser;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  export async function getUsers(limit?: number) {
+    const queries: any[] = [Query.orderDesc("$createdAt")];
+  
+    if (limit) {
+      queries.push(Query.limit(limit));
+    }
+  
+    try {
+      const users = await databases.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.userCollectionId,
+        queries
+      );
+  
+      if (!users) throw Error;
+  
+      return users;
     } catch (error) {
       console.log(error);
     }

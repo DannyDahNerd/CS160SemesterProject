@@ -19,7 +19,8 @@ import { useCreatePost, useUpdatePost } from "@/lib/react-query/queriesAndMutati
 import { useUserContext } from "@/context/AuthContext"
 import { useToast } from "@/hooks/use-toast"
 import { useNavigate } from "react-router-dom"
-import Loader from "../shared/Loader"
+import LocationSelector from "@/components/shared/LocationSelector";
+import { useEffect, useState } from "react"
 
 type PostFormProps = {
     post?:Models.Document;
@@ -28,55 +29,67 @@ type PostFormProps = {
 const PostForm = ({ post, action }: PostFormProps) => {
     const {mutateAsync:createPost, isPending: isLoadingCreate} = useCreatePost();
     const {mutateAsync:updatePost, isPending: isLoadingUpdate} = useUpdatePost();
-
     const {user} = useUserContext();
     const navigate = useNavigate();
-    const {toast} = useToast()
+    const {toast} = useToast();
+    const [locationCoords, setLocationCoords] = useState<{ lat: number; lng: number } | null>(null);
+    const [locationLabel, setLocationLabel] = useState<string>("");
 
+    useEffect(() => {
+      if (post && action === "Update") {
+        setLocationLabel(post.location);
+        setLocationCoords({
+          lat: post.latitude,
+          lng: post.longitude,
+        });
+      }
+    }, [post, action]);
 
-
-    // 1. Define your form.
+    // Define Form
     const form = useForm<z.infer<typeof PostValidation>>({
-        resolver: zodResolver(PostValidation),
-        defaultValues: {
+      resolver: zodResolver(PostValidation),
+      mode: "onSubmit",
+      defaultValues: {
         caption: post ? post?.caption : "",
         file: [],
-        location: post ? post?.location : "",
         tags: post ? post.tags.join(',') : "",
-        },
-    })
+      },
+    });
     
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof PostValidation>) {
-
-      if(post && action==="Update") {
-        const updatedPost = await updatePost({
-          ...values,
-          postId:post.$id,
-          imageId:post?.imageId,
-          imageUrl:post?.imageUrl,
-        })
-
-        if(!updatedPost) {
-          toast({
-            title:"Pleas try again"
-          })
-        }
-
-        return navigate(`/posts/${post.$id}`);
+      if (!locationCoords || !locationLabel) {
+        toast({ title: "Please select a location" });
+        return;
       }
-        const newPost = await createPost({
-          ...values,
-          userId: user.id,
-        })
-
-        if(!newPost) {
-          toast({
-            title: 'Please try again'
-          })
-        }
-
-        navigate('/');
+    
+      const payload = {
+        ...values,
+        userId: user.id,
+        location: locationLabel,
+        latitude: locationCoords.lat,
+        longitude: locationCoords.lng,
+      };
+    
+      let newPost;
+      if (post && action === "Update") {
+        newPost = await updatePost({
+          ...payload,
+          postId: post.$id,
+          imageId: post.imageId,
+          imageUrl: post.imageUrl,
+        });
+      } else {
+        console.log("Payload being sent:", payload);
+        newPost = await createPost(payload);
+      }
+    
+      if (!newPost) {
+        toast({ title: "Please try again" });
+        return;
+      }
+    
+      navigate(post ? `/posts/${post.$id}` : "/");
     }
 
     return (
@@ -111,19 +124,15 @@ const PostForm = ({ post, action }: PostFormProps) => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="shad-form_label">Add Location</FormLabel>
-              <FormControl>
-                <Input type="text" className="shad-input" {...field} />
-              </FormControl>
-              <FormMessage className="shad-form_message"/>
-            </FormItem>
-          )}
-        />
+        <div>
+          <FormLabel className="shad-form_label mb-2">Select a Location</FormLabel>
+          <LocationSelector
+            onSelect={(coords, label) => {
+              setLocationCoords(coords);
+              setLocationLabel(label);
+            }}
+          />
+        </div>
         <FormField
           control={form.control}
           name="tags"
@@ -145,7 +154,13 @@ const PostForm = ({ post, action }: PostFormProps) => {
           )}
         />
         <div className = "flex gap-4 items-center justify-end">
-            <Button type="button" className="shad-button_dark_4">Cancel</Button>
+          <Button 
+              type="button" 
+              className="shad-button_dark_4"
+              onClick={() => navigate(-1)} // Go back one page
+            >
+              Cancel
+          </Button>
             <Button type="submit" className="untide-button_primary whitespace-nowrap"
             disabled={isLoadingCreate || isLoadingUpdate}>
               {isLoadingCreate || isLoadingUpdate && 'Loading...'}

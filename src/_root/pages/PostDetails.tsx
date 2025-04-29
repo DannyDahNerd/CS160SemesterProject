@@ -2,17 +2,39 @@ import Loader from '@/components/shared/Loader';
 import PostStats from '@/components/shared/PostStats';
 import { Button } from '@/components/ui/button';
 import { useUserContext } from '@/context/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { deletePost } from '@/lib/appwrite/api';
 import { useGetPostById } from '@/lib/react-query/queriesAndMutations'
-import { timeAgo } from '@/lib/utils';
-import React from 'react'
-import { Link, useParams } from 'react-router-dom';
+import { extractCityState, timeAgo } from '@/lib/utils';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const PostDetails = () => {
   const {id} = useParams();
   const {data:post, isPending} = useGetPostById(id || '');
   const {user} = useUserContext();
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleDeletePost = () => {}
+  const handleDeletePost = async () => {
+    if (!post) return;
+  
+    const confirmed = window.confirm("Are you sure you want to delete this post?");
+    if (!confirmed) return;
+  
+    try {
+      const result = await deletePost(post.$id, post.imageId);
+  
+      if (result?.status === "ok") {
+        toast({ title: "Post deleted successfully" });
+        navigate("/");
+      } else {
+        toast({ title: "Something went wrong. Please try again." });
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      toast({ title: "Error occurred while deleting the post." });
+    }
+  };
 
   return (
     <div className="post_details-container">
@@ -42,8 +64,9 @@ const PostDetails = () => {
                         </p>
                         -
                         <p className="subtle-semibold lg:small-regular">
-                            {post?.location}
+                          {post?.location ? extractCityState(post.location) : ""}
                         </p>
+
                     </div>
                 </div>
               </Link>
@@ -71,13 +94,15 @@ const PostDetails = () => {
             <hr className="border w-full border-dark-4/80"/>
             <div className = "flex flex-col flex-1 w-full small-medium lg:base-regular">
                 <p>{post?.caption}</p>
-                <ul className = "flex gap-1 mt-2">
-                    {post?.tags.map((tag: string) => (
-                        <li key={tag} className="text-cyan-700">
-                            #{tag}
-                        </li>
-                    ))}
+                {Array.isArray(post?.tags) && post.tags.length > 0 && post.tags.some(tag => tag.trim() !== "") && (
+                <ul className="flex gap-1 mt-2">
+                  {post.tags.map((tag: string) => (
+                    <li key={tag} className="text-cyan-700">
+                      #{tag.trim()}
+                    </li>
+                  ))}
                 </ul>
+              )}
             </div>
 
             <div className="w-full">

@@ -56,3 +56,35 @@ export const timeAgo = (timestamp: string = ""): string => {
 export const checkIsLiked = (likeList: string[], userId: string) => {
   return likeList.includes(userId);
 };
+
+export const buildUpdateUserPayload = (user: any, extraFields = {}) => ({
+  userId: user.id || user.$id,
+  name: user.name,
+  bio: user.bio,
+  imageId: user.imageId,
+  imageUrl: user.imageUrl,
+  file: [], // No new file upload when just following
+  followers: user.followers || [],
+  following: user.following || [],
+  ...extraFields,
+});
+
+export async function geocodeAddress(address: string) {
+  const params = new URLSearchParams({ q: address, format: "json", limit: "1" });
+  const res = await fetch(`https://nominatim.openstreetmap.org/search?${params}`);
+  const data = await res.json();
+  if (!data || data.length === 0) return null;
+  return {
+    lat: parseFloat(data[0].lat),
+    lng: parseFloat(data[0].lon),
+    label: data[0].display_name,
+  };
+}
+
+export function extractCityState(location: string): string {
+  const parts = location.split(",").map(part => part.trim());
+  if (parts.length >= 3) {
+    return `${parts[0]}, ${parts[2]}`; // City, State
+  }
+  return location;
+}

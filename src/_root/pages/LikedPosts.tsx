@@ -1,59 +1,41 @@
-// import GridPostList from "@/components/shared/GridPostsList";
-// import Loader from "@/components/shared/Loader";
-// import { useGetCurrentUser } from "@/lib/react-query/queriesAndMutations";
-
-
-// const LikedPosts = () => {
-// const { data: currentUser } = useGetCurrentUser();
-
-//   if (!currentUser)
-//     return (
-//       <div className="flex-center w-full h-full">
-//         <Loader />
-//       </div>
-//     );
-
-//   return (
-//     <>
-//       {currentUser.liked.length === 0 && (
-//         <p className="text-light-4">No liked posts</p>
-//       )}
-
-//       <GridPostList posts={currentUser.liked} showStats={false} />
-//     </>
-//   );
-// };
-
 import GridPostList from "@/components/shared/GridPostsList";
 import Loader from "@/components/shared/Loader";
 import { useGetCurrentUser } from "@/lib/react-query/queriesAndMutations";
-import { Models } from "appwrite";
+import { Link, useParams } from "react-router-dom";
 
 const LikedPosts = () => {
   const { data: currentUser } = useGetCurrentUser();
-  console.log("currentUser", currentUser);
-
+  const { id } = useParams();
   const likePosts = currentUser?.liked?.slice().reverse();
 
   return (
     <div className="saved-container">
-      <div className="flex gap-2 w-full max-w-5xl">
-        <img
-          src="/assets/icons/liked.svg"
-          width={36}
-          height={36}
-          alt="edit"
-          className="invert-white"
-        />
-        <h2 className="h3-bold md:h2-bold text-left w-full">Liked Posts</h2>
+      <div className="flex flex-col w-full max-w-5xl">
+        <Link
+          to={`/profile/${id}`}
+          className="text-sm text-cyan-700 hover:underline mb-2"
+        >
+          ← Back to Profile
+        </Link>
+
+        <div className="flex gap-2 items-center">
+          <img
+            src="/assets/icons/liked.svg"
+            width={36}
+            height={36}
+            alt="liked"
+            className="invert-white"
+          />
+          <h2 className="h3-bold md:h2-bold text-left">Liked Posts</h2>
+        </div>
       </div>
 
       {!currentUser ? (
         <Loader />
       ) : (
-        <ul className="w-full flex justify-center max-w-5xl gap-9">
+        <ul className="w-full flex justify-center max-w-5xl gap-9 mt-6">
           {likePosts.length === 0 ? (
-            <p className="text-light-4">No available posts</p>
+            <p className="text-cyan-700">No available posts</p>
           ) : (
             <GridPostList posts={likePosts} showStats={false} />
           )}

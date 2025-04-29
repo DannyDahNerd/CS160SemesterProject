@@ -1,7 +1,6 @@
 import { useUserContext } from '@/context/AuthContext';
-import { timeAgo } from '@/lib/utils';
+import { extractCityState, timeAgo } from '@/lib/utils';
 import { Models } from 'appwrite';
-import React from 'react'
 import { Link } from 'react-router-dom';
 import PostStats from './PostStats';
 
@@ -21,7 +20,7 @@ const PostCard = ({post}:PostCardProps) => {
                     <img
                     src={post?.creator?.imageUrl || `/assets/icons/profile-placeholder.svg`}
                     alt="creator"
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="rounded-full w-12 lg:h-12"
                     />
                 </Link>
  
@@ -35,7 +34,7 @@ const PostCard = ({post}:PostCardProps) => {
                         </p>
                         -
                         <p className="subtle-semibold lg:small-regular">
-                            {post.location}
+                            {extractCityState(post.location)}
                         </p>
                     </div>
                 </div>
@@ -51,13 +50,15 @@ const PostCard = ({post}:PostCardProps) => {
         <Link to={`/posts/${post.$id}`}>
             <div className = "small-medium lg:base-medium py-5">
                 <p>{post.caption}</p>
-                <ul className = "flex gap-1 mt-2">
+                {Array.isArray(post.tags) && post.tags.length > 0 && post.tags.some(tag => tag.trim() !== "") && (
+                    <ul className="flex gap-1 mt-2">
                     {post.tags.map((tag: string) => (
                         <li key={tag} className="text-cyan-700">
-                            #{tag}
+                        #{tag.trim()}
                         </li>
                     ))}
-                </ul>
+                    </ul>
+                )}
             </div>
             
             {/* we can decide which one looks better on the home page

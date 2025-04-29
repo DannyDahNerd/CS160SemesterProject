@@ -189,7 +189,7 @@ const UpdateProfile = () => {
               </Button>
               <Button
                 type="submit"
-                className="shad-button_primary whitespace-nowrap"
+                className="untide-button_primary whitespace-nowrap"
                 disabled={isLoadingUpdate}>
                 {isLoadingUpdate && <Loader />}
                 Update Profile
