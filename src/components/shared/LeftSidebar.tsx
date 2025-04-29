@@ -28,18 +28,20 @@ const LeftSidebar = () => {
         </Link>
 
         <Link
-          to={`/profile/${user.id} "/home"`}
+          to={`/profile/${user.id}`}
           className="flex gap-3 items-center"
         >
-          <img
-            src={user.imageUrl || "assets/icons/profile-placeholder.svg"}
-            alt="profile"
-            className="h-14 w-14 rounded-full"
-          />
+          <div className="w-14 h-14 rounded-full overflow-hidden bg-light-3">
+            <img
+              src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}
+              alt="profile"
+              className="w-full h-full object-cover"
+            />
+          </div>
           <div className="flex flex-col">
             <p className="body-bold"> {user.name}</p>
             <p className="small-regular text-light-2">
-              @{user.username} 
+              @{user.username}
             </p>
           </div>
         </Link>
