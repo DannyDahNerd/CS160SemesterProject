@@ -244,6 +244,36 @@
   .user-card {
     @apply flex-center flex-col gap-4 border border-dark-4 rounded-[20px] px-5 py-8;
   }
+
+  .popup-loc {
+    font-family: 'Arial';
+    padding: 5px;
+    text-align: center;
+    @apply
+    text-cyan-500
+    font-bold
+  }
+
+  .popup-desc {
+    font-family: 'arial';
+    color: black;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .popup-button {
+    display: flex;
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+    color:white;
+  }
+
+  .popup-link a {
+    @apply text-white !important
+  }
+
 }
 
 @layer components {
@@ -271,7 +301,14 @@
   }
 
   .untide-button_primary {
-    @apply bg-cyan-500 hover:bg-cyan-900 text-light-1 flex gap-2 !important;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    @apply
+    bg-cyan-500
   }
 
   .shad-button_dark_4 {
