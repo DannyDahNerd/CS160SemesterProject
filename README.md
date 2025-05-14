@@ -1,27 +1,49 @@
-# React + TypeScript + Vite
+# UnTide
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**GitHub Repository URL:** https://github.com/DannyDahNerd/CS160SemesterProject
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Before running UnTide, make sure the following are installed on your system:
 
-## Expanding the ESLint configuration
+- [Node.js](https://nodejs.org/) (v18 or higher recommended)
+- A code editor like [Visual Studio Code](https://code.visualstudio.com/)
+- Git (to clone the repository)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Setup and Startup Instructions
 
-- Configure the top-level `parserOptions` property like this:
+Follow the steps below to clone, install dependencies, and launch UnTide.
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+### 1. Clone the Repository
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Create or navigate to a folder where you want to place the project (such as UnTide), then run:
+
+git clone https://github.com/DannyDahNerd/CS160SemesterProject
+
+### 2. Project Setup
+
+Next, navigate to CS160SemesterProject and run:
+
+npm install --force
+
+### 3. Run the Project
+
+To run UnTide, run the development server:
+
+npm run dev
+
+The console will display an output in a format similar to:
+  ➜  Local:   http://localhost:xxxx/
+
+Copy the local URL to your browser to run UnTide
+
+### 4. Account Creation
+
+You will be directed to the Sign In screen. You can:
+
+* Sign in with an existing account
+
+* Or click the "Sign Up" link at the bottom to create a new account
+
+
+
